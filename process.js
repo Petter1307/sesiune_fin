@@ -1,9 +1,12 @@
 var input = document.querySelector("#up");
+
 input.addEventListener("change", load);
 function load() {
   var fr = new FileReader();
   fr.onload = process;
   fr.readAsArrayBuffer(this.files[0]);
+  const filename = fr.filename;
+  console.log(fr);
 }
 function process() {
   var dv = new DataView(this.result);
@@ -17,6 +20,7 @@ function process() {
     offset += 2;
     while (offset < dv.byteLength) {
       if (app1 == 0xffe1) {
+        console.log(app1);
         pieces[i] = { recess: recess, offset: offset - 2 };
         recess = offset + dv.getUint16(offset);
         i++;
@@ -24,6 +28,7 @@ function process() {
         break;
       }
       offset += dv.getUint16(offset);
+      console.log(offset);
       var app1 = dv.getUint16(offset);
       offset += 2;
     }
@@ -34,6 +39,7 @@ function process() {
       }, this);
       newPieces.push(this.result.slice(recess));
       var br = new Blob(newPieces, { type: "image/jpeg" });
+      console.log(br);
       const url = URL.createObjectURL(br);
       const link = document.createElement("a");
       link.href = url;
