@@ -1,15 +1,29 @@
 var input = document.querySelector("#up");
+// window.onload = getExif;
+
+// function getExif() {
+//   var img = document.querySelector("#up");
+// }
 
 input.addEventListener("change", load);
 function load() {
   var fr = new FileReader();
-  fr.onload = process;
   fr.readAsArrayBuffer(this.files[0]);
   const filename = fr.filename;
-  console.log(fr);
+  console.log(fr.result);
+  fr.onload = sendloaded_photo;
+  // fr.onload = process;
 }
-function process() {
-  var dv = new DataView(this.result);
+function sendloaded_photo() {
+  // TODO CREATE THE FUNCTION TO READ FROM ARRAYBUFFER DATA
+  console.log(this.result);
+  var exif = EXIF.readFromBinaryFile(this.result);
+  console.log(exif);
+
+  process(this.result);
+}
+function process(result) {
+  var dv = new DataView(result);
   var offset = 0,
     recess = 0;
   var pieces = [];
@@ -20,7 +34,6 @@ function process() {
     offset += 2;
     while (offset < dv.byteLength) {
       if (app1 == 0xffe1) {
-        console.log(app1);
         pieces[i] = { recess: recess, offset: offset - 2 };
         recess = offset + dv.getUint16(offset);
         i++;
@@ -28,18 +41,16 @@ function process() {
         break;
       }
       offset += dv.getUint16(offset);
-      console.log(offset);
       var app1 = dv.getUint16(offset);
       offset += 2;
     }
     if (pieces.length > 0) {
       var newPieces = [];
       pieces.forEach(function (v) {
-        newPieces.push(this.result.slice(v.recess, v.offset));
+        newPieces.push(result.slice(v.recess, v.offset));
       }, this);
-      newPieces.push(this.result.slice(recess));
+      newPieces.push(result.slice(recess));
       var br = new Blob(newPieces, { type: "image/jpeg" });
-      console.log(br);
       const url = URL.createObjectURL(br);
       const link = document.createElement("a");
       link.href = url;
