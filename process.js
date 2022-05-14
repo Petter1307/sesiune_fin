@@ -13,8 +13,10 @@ function load() {
 function show_exif_data() {
   var exif = EXIF.readFromBinaryFile(this.result, function () {});
   var allMetaData = EXIF.getAllTags(this.result);
+  console.log(typeof exif);
   var allMetaDataSpan = document.getElementById("metadata-span");
   allMetaDataSpan.innerHTML = JSON.stringify(exif, null, "\n");
+
   start.addEventListener("click", () => process(this.result));
 }
 function process(result) {
