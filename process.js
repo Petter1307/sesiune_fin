@@ -1,26 +1,21 @@
 var input = document.querySelector("#up");
-// window.onload = getExif;
+var output = document.getElementById("exif_wrapper");
 
-// function getExif() {
-//   var img = document.querySelector("#up");
-// }
-
+var filename = undefined;
 input.addEventListener("change", load);
+var start = document.getElementById("start_btn");
 function load() {
   var fr = new FileReader();
   fr.readAsArrayBuffer(this.files[0]);
-  const filename = fr.filename;
-  console.log(fr.result);
-  fr.onload = sendloaded_photo;
-  // fr.onload = process;
+  filename = this.files[0].name;
+  fr.onload = show_exif_data;
 }
-function sendloaded_photo() {
-  // TODO CREATE THE FUNCTION TO READ FROM ARRAYBUFFER DATA
-  console.log(this.result);
-  var exif = EXIF.readFromBinaryFile(this.result);
-  console.log(exif);
-
-  process(this.result);
+function show_exif_data() {
+  var exif = EXIF.readFromBinaryFile(this.result, function () {});
+  var allMetaData = EXIF.getAllTags(this.result);
+  var allMetaDataSpan = document.getElementById("metadata-span");
+  allMetaDataSpan.innerHTML = JSON.stringify(exif, null, "\n");
+  start.addEventListener("click", () => process(this.result));
 }
 function process(result) {
   var dv = new DataView(result);
@@ -54,8 +49,8 @@ function process(result) {
       const url = URL.createObjectURL(br);
       const link = document.createElement("a");
       link.href = url;
-      link.innerText = "Download xd";
-      link.download = "processed_img";
+      link.innerText = "Download";
+      link.download = "processed_" + filename;
       link.id = "download_a";
       const output_img = document.createElement("img");
       output_img.src = link.href;
