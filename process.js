@@ -12,11 +12,28 @@ function load() {
 }
 function show_exif_data() {
   var exif = EXIF.readFromBinaryFile(this.result, function () {});
-  var allMetaData = EXIF.getAllTags(this.result);
+  // var allMetaData = EXIF.getAllTags(this.result);
   console.log(typeof exif);
-  var allMetaDataSpan = document.getElementById("metadata-span");
-  allMetaDataSpan.innerHTML = JSON.stringify(exif, null, "\n");
-
+  // var allMetaDataSpan = document.getElementById("metadata-span");
+  // allMetaDataSpan.innerHTML = JSON.stringify(exif, null, "\n");
+  var tab = document.createElement("table");
+  var tabBody = document.createElement("tbody");
+  for (const [key, prop] of Object.entries(exif)) {
+    var row = document.createElement("tr");
+    let keyN = document.createElement("td");
+    let keyV = document.createTextNode(key);
+    keyN.appendChild(keyV);
+    row.appendChild(keyN);
+    let propN = document.createElement("td");
+    let propV = document.createTextNode(prop);
+    propN.appendChild(propV);
+    row.appendChild(propN);
+    tabBody.appendChild(row);
+  }
+  tab.appendChild(tabBody);
+  tab.id = "tab_info";
+  document.getElementById("test2").appendChild(tab);
+  console.log(tab);
   start.addEventListener("click", () => process(this.result));
 }
 function process(result) {

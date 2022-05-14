@@ -29,3 +29,12 @@
     flex-flow: column nowrap;
     align-items: center;
 }
+td{
+    max-width:300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#tab_info{
+    margin-top: 1em;
+}
