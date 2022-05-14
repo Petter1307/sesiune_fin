@@ -78,12 +78,12 @@ function process(result) {
       document.getElementById("download_wrapper").appendChild(link);
     } else {
       const err = document.createElement("p");
-      err.innerText = "piece.length is fucked"; // in case that it failed to process the inforamtion form the file
+      err.innerText = "Something went wrong. Data was not found!"; // in case that it failed to process the inforamtion form the file
       document.getElementById("img_wrapper").appendChild(err);
     }
   } else {
     const err = document.createElement("p");
-    err.innerText = "dv.getUint16(offset) == 0xffd8 is fucked"; // this error should be in case that the file format is not ok.
+    err.innerText = "The file format is not ok."; // this error should be in case that the file format is not ok.
     document.getElementById("img_wrapper").appendChild(err);
   }
 }
